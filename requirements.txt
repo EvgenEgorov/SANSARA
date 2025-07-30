@@ -1,0 +1,13 @@
+# This file may be used to create an environment using:
+# $ conda create --name <env> --file <this file>
+# platform: linux-64
+scvelo=0.2.5
+scanpy=1.9.1
+pandas=1.4.3
+numpy=1.22.4
+anndata=0.8.0
+matplotlib=3.5.1
+seaborn=0.11.2
+scipy=1.7.0
+torch=2.0.1+cu117
+velovi=0.3.0
