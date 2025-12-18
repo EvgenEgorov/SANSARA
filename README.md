@@ -1,3 +1,4 @@
+# SANSARA — Splicing-Aware scrNa-Seq AppRoAch
 This page describes SANSARA pipeline to create splice-aware object from conventional scRNA-seq object. Before running SANSARA, velocyto software needs to be installed (https://velocyto.org/velocyto.py/install/index.html#install) and used on cellranger output for the samples of interest as described here https://velocyto.org/velocyto.py/tutorial/cli.html
 SANSARA works in conda environment with the requirements listed in requirements.txt file. The environment can be created using the folowwing command:
 
