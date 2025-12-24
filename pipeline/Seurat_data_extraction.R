@@ -12,7 +12,7 @@ suppressPackageStartupMessages(library(argparser))
 
 ## Parse arguments
 p <- arg_parser("SANSARA - Export Seurat object to CSV/MTX format")
-p <- add_argument(p, "--input_file", help="Path to Seurat object (in .rds format)", default=NA)
+p <- add_argument(p, "--input-file", help="Path to Seurat object (in .rds format)", default=NA)
 args <- parse_args(p)
 
 if (is.na(args$input_file)) {
