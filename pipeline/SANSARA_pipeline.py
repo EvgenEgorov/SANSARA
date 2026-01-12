@@ -6,40 +6,86 @@ import anndata
 import matplotlib.pyplot as plt
 import seaborn as sns
 import os
+import argparse
 from scipy import io
 from scipy.sparse import coo_matrix, csr_matrix
 import torch
 from velovi import preprocess_data, VELOVI
 
-# ============================================================================
-# User parameters - change for your own data 
-# ============================================================================
+### Argparsing the user parameters
 
+parser = argparse.ArgumentParser(description="The second part of SANSARA pipeline, which generates the splicing-aware gene expression (saGEX) matrix ")
+### Required arguments -- working directory and loom file location
+required_args = parser.add_argument_group('required arguments')
+
+required_args.add_argument("-loom","--loom-file", 
+                    help="Name of the loom file with spliced and unspliced counts")
 # Input paths
-WORKING_DIR = 'path_to_sample/sample/' # Change this to your working directory
-COUNTS_FILE = 'counts.mtx' 
-METADATA_FILE = 'metadata.csv'
-GENE_NAMES_FILE = 'gene_names.csv'
-LOOM_FILE = 'path_to_loom/sample_alignments_G65EN.loom'
 
-# Barcode naming configuration - the barcode names NEED to align between Anndata and loom files 
-BARCODE_PREFIX = 'sample_'
-BARCODE_POSTFIX = '-1'
+parser.add_argument("-wd","--working-dir",
+                    help="Working directory")
+parser.add_argument("-counts","--counts-file",default = 'counts.mtx',
+                    help="Name of the file with counts")
+parser.add_argument("-metadata","--metadata-file",default = 'metadata.csv',
+                    help="Name of the metadata file")
+parser.add_argument("-genes","--gene-names-file",default = 'gene_names.csv',
+                    help="Name of the file with gene names")
+
+
+# Barcode naming configuration
+parser.add_argument("-prefix","--barcode-prefix",default = "sample_",
+                    help = "The prefix of the barcode (the barcode names HAVE to align between Anndata and loom files)")
+parser.add_argument("-postfix","--barcode-postfix",default = "-1",
+                    help = "The prefix of the barcode (the barcode names HAVE to align between Anndata and loom files)")
 
 # Output configuration
-OUTPUT_FILE = 'splice_aware_matrix.csv'
+parser.add_argument("-out","--output-file",default = "splice_aware_matrix.csv",
+                    help = "The name of the output file")
 
 # Analysis parameters
-MIN_SHARED_COUNTS = 1
-N_TOP_GENES = 20000
-N_PCS = 30
-N_NEIGHBORS = 30
-N_SAMPLES = 25
-LATENT_TIME_SCALING = 20
+parser.add_argument("-min-counts","--min-shared-counts",default = 1, type=int, 
+                    help = "Minimum shared counts between cells in the sample")
+parser.add_argument("-top","--n-top-genes",default = 20000, type=int, 
+                    help = "The number of the genes selected for the velocity analysis")
+parser.add_argument("-pcs","--n-pcs",default = 30, type = int, 
+                    help = "The number of principal components used in the preprocessing")
+parser.add_argument("-neighbors","--n-neighbors",default = 30, type = int,
+                    help = "The number of neighbors used for in the preprocessing")
+parser.add_argument("-samples","--n-samples",default = 25, type = int,
+                    help = "The number of samples used in the velocity inference")
+parser.add_argument("-time","--latent-time-scaling",default = 20, type = int,
+                    help = "Latent time scaling value used in the velocity inference")
 
-# ============================================================================
+args = parser.parse_args()
+
+# Arguments processing
+if args.working_dir:
+    WORKING_DIR = args.working_dir 
+else:
+    WORKING_DIR = os.getcwd()
+    
+COUNTS_FILE = args.counts_file 
+METADATA_FILE = args.metadata_file
+GENE_NAMES_FILE = args.gene_names_file
+LOOM_FILE = args.loom_file
+
+
+BARCODE_PREFIX = args.barcode_prefix
+BARCODE_POSTFIX = args.barcode_postfix
+
+# Output configuration
+OUTPUT_FILE = args.output_file
+
+# Analysis parameters
+MIN_SHARED_COUNTS = args.min_shared_counts
+N_TOP_GENES = args.n_top_genes
+N_PCS = args.n_pcs
+N_NEIGHBORS = args.n_neighbors
+N_SAMPLES = args.n_samples
+LATENT_TIME_SCALING = args.latent_time_scaling
+
+
 # Functions
-# ============================================================================
 
 def load_anndata(working_dir, counts_file, metadata_file, gene_names_file):
     """
@@ -148,9 +194,8 @@ def calculate_sagex_matrix(adata, velocity_layer='velocity'):
   
     return sagex_matrix
 
-# ============================================================================
+
 # Analysis pipeline
-# ============================================================================
 
 def main():
     """
@@ -208,12 +253,9 @@ def main():
     print(f"  Shape: {sagex_matrix.shape[0]} cells × {sagex_matrix.shape[1]} features")
     print(f"  ({len(sagex_matrix.columns)//2} genes with spliced/unspliced components)")
     print(f"{'='*70}\n")
-    
-#    return adata, sagex_matrix # optional
 
-# ============================================================================
+
 # Execute pipeline 
-# ============================================================================
 
 if __name__ == "__main__":
     main()
