@@ -15,7 +15,7 @@ from velovi import preprocess_data, VELOVI
 ### Argparsing the user parameters
 
 parser = argparse.ArgumentParser(description="The second part of SANSARA pipeline, which generates the splicing-aware gene expression (saGEX) matrix ")
-### Required arguments -- working directory and loom file location
+### Required arguments -- loom file location
 required_args = parser.add_argument_group('required arguments')
 
 required_args.add_argument("-loom","--loom-file", 
@@ -259,3 +259,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
