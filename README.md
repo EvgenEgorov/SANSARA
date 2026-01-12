@@ -8,7 +8,7 @@ Before running SANSARA, ensure the following are installed:
 - **Velocyto**: Follow installation instructions [here](https://velocyto.org/velocyto.py/install/index.html#install). Use Velocyto to generate loom files for your samples from Cell Ranger output as described in the [tutorial](https://velocyto.org/velocyto.py/tutorial/cli.html).  
 - **Conda**: Create the SANSARA environment using:
   ```
-  conda create --name <env> --file requirements.txt
+  conda create --name <env> --file sansara_env.yml
   conda activate <env>
   ```
 - **Additional Python packages**:
