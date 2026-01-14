@@ -14,47 +14,79 @@ from velovi import preprocess_data, VELOVI
 
 ### Argparsing the user parameters
 
-parser = argparse.ArgumentParser(description="The second part of SANSARA pipeline, which generates the splicing-aware gene expression (saGEX) matrix ")
-### Required arguments -- loom file location
+parser = argparse.ArgumentParser(
+        description="SANSARA converts conventional scRNA-seq data into a splicing-aware gene expression matrix (saGEX), enabling analyses that account for gene-specific splicing dynamics at the single-cell level."
+)
+### Required arguments: loom file and path to Anndata files
 required_args = parser.add_argument_group('required arguments')
 
-required_args.add_argument("-loom","--loom-file", 
-                    help="Name of the loom file with spliced and unspliced counts")
-# Input paths
+required_args.add_argument(
+        "--loom-file", "-loom",
+        required=True,
+        help="Path to velocyto output file in loom format containing spliced and unspliced counts"
+)
 
-parser.add_argument("-wd","--working-dir",
-                    help="Working directory")
-parser.add_argument("-counts","--counts-file",default = 'counts.mtx',
-                    help="Name of the file with counts")
-parser.add_argument("-metadata","--metadata-file",default = 'metadata.csv',
-                    help="Name of the metadata file")
-parser.add_argument("-genes","--gene-names-file",default = 'gene_names.csv',
-                    help="Name of the file with gene names")
+required_args.add_argument(
+        "-wd","--working-dir",
+        required=True,
+        help="Path to the folder with counts, gene names, and metadata in Scanpy Anndata format. Defult: current working directory"
+)
 
+# Input files
+parser.add_argument(
+        "-counts","--counts-file",default = 'counts.mtx',
+        help="Name of the file with counts"
+)
+parser.add_argument(
+        "-metadata","--metadata-file",default = 'metadata.csv',
+        help="Name of the metadata file"
+)
+parser.add_argument(
+        "-genes","--gene-names-file",default = 'gene_names.csv',
+        help="Name of the file with gene names"
+)
 
 # Barcode naming configuration
-parser.add_argument("-prefix","--barcode-prefix",default = "sample_",
-                    help = "The prefix of the barcode (the barcode names HAVE to align between Anndata and loom files)")
-parser.add_argument("-postfix","--barcode-postfix",default = "-1",
-                    help = "The prefix of the barcode (the barcode names HAVE to align between Anndata and loom files)")
+parser.add_argument(
+        "-prefix","--barcode-prefix",default = "sample_",
+        help = "Prefix of the barcode (the barcode names HAVE to align between Anndata and loom files), default = sample_"
+)
+parser.add_argument(
+        "-postfix","--barcode-postfix",default = "-1",
+        help = "Postfix of the barcode (the barcode names HAVE to align between Anndata and loom files), default = -1"
+)
 
 # Output configuration
-parser.add_argument("-out","--output-file",default = "splice_aware_matrix.csv",
-                    help = "The name of the output file")
+parser.add_argument(
+        "-out","--output-file",default = "splice_aware_matrix.csv",
+        help = "Name of the output file"
+)
 
 # Analysis parameters
-parser.add_argument("-min-counts","--min-shared-counts",default = 1, type=int, 
-                    help = "Minimum shared counts between cells in the sample")
-parser.add_argument("-top","--n-top-genes",default = 20000, type=int, 
-                    help = "The number of the genes selected for the velocity analysis")
-parser.add_argument("-pcs","--n-pcs",default = 30, type = int, 
-                    help = "The number of principal components used in the preprocessing")
-parser.add_argument("-neighbors","--n-neighbors",default = 30, type = int,
-                    help = "The number of neighbors used for in the preprocessing")
-parser.add_argument("-samples","--n-samples",default = 25, type = int,
-                    help = "The number of samples used in the velocity inference")
-parser.add_argument("-time","--latent-time-scaling",default = 20, type = int,
-                    help = "Latent time scaling value used in the velocity inference")
+parser.add_argument(
+        "-min-counts","--min-shared-counts",default = 1, type=int, 
+        help = "Minimum shared counts between cells in the sample"
+)
+parser.add_argument(
+        "-top","--n-top-genes",default = 20000, type=int, 
+        help = "Number of genes selected for the velocity analysis"
+)
+parser.add_argument(
+        "-pcs","--n-pcs",default = 30, type = int, 
+        help = "Number of principal components used for preprocessing"
+        )
+parser.add_argument(
+        "-neighbors","--n-neighbors",default = 30, type = int,
+        help = "Number of neighbors used for preprocessing"
+)
+parser.add_argument(
+        "-samples","--n-samples",default = 25, type = int,
+        help = "Number of samples used for velocity inference"
+)
+parser.add_argument(
+        "-time","--latent-time-scaling",default = 20, type = int,
+        help = "Latent time scaling value used for velocity inference"
+)
 
 args = parser.parse_args()
 
