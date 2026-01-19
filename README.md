@@ -34,11 +34,11 @@ Rscript pipeline/Seurat_data_extraction.R --input_file path/to/Seurat_rds_object
 ## Running SANSARA
 SANSARA uses `scvelo` and `velovi` to select informative genes and estimate RNA velocity.  
 
-**Required arguments**
-`--loom-file <file.loom>` 
+**Required arguments**  
+`--loom-file <file.loom>`   
     Path to the output of velocyto in .loom format
-`-wd <path_adata> `
-    Path to the folder with counts, gene names, and metadata in Scanpy Anndata format
+`-wd <path_adata> `  
+    Path to the folder with counts, gene names, and metadata in Scanpy Anndata format  
 
 **Running the pipeline**
 ```
