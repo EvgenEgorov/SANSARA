@@ -35,14 +35,10 @@ Rscript pipeline/Seurat_data_extraction.R --input_file path/to/Seurat_rds_object
 SANSARA uses `scvelo` and `velovi` to select informative genes and estimate RNA velocity.  
 
 **Required arguments**
-```
---loom-file <file.loom>
-```
-Path to the output of velocyto in .loom format
-```
--wd <path_adata> 
-```
-Path to the folder with counts, gene names, and metadata in Scanpy Anndata format
+`--loom-file <file.loom>` 
+    Path to the output of velocyto in .loom format
+`-wd <path_adata> `
+    Path to the folder with counts, gene names, and metadata in Scanpy Anndata format
 
 **Running the pipeline**
 ```
@@ -56,10 +52,10 @@ python pipeline/SANSARA_pipeline.py --loom-file path/to/loom_object -wd path/to/
 --metadata-file      Name of the metadata file, default = 'metadata.csv'
 --gene-names-file    Name of the file with gene names, default = 'counts.mtx'
 ```
-- Barcode naming
+- Barcode naming: barcode names HAVE to align between Anndata and loom files (!)
 ```
---barcode-prefix     The prefix of the barcode (the barcode names HAVE to align between Anndata and loom files), default = "sample\_"
---barcode-postfix    The postfix of the barcode (the barcode names HAVE to align between Anndata and loom files), default = "-1"
+--barcode-prefix     Prefix of the barcode, default = "sample\_"
+--barcode-postfix    Postfix of the barcode, default = "-1"
 ```   
 - Output
 ```
@@ -67,12 +63,12 @@ python pipeline/SANSARA_pipeline.py --loom-file path/to/loom_object -wd path/to/
 ```
 - Analysis parameters
 ```
---min-shared-counts  Minimum shared counts between cells in the sample, default = 1
---n-top-genes        Number of genes selected for the velocity analysis, default = 20000 
---n-pcs              Number of principal components used for preprocessing, default = 30
---n-neighbors        Number of neighbors used for in the preprocessing, default = 30
---n-samples          Number of samples used for velocity inference, default = 25
---latent-time-scaling  Latent time scaling value used in the velocity inference, default = 20
+--min-shared-counts     Minimum shared counts between cells in the sample, default = 1
+--n-top-genes           Number of genes selected for the velocity analysis, default = 20000 
+--n-pcs                 Number of principal components used for preprocessing, default = 30
+--n-neighbors           Number of neighbors used for in the preprocessing, default = 30
+--n-samples             Number of samples used for velocity inference, default = 25
+--latent-time-scaling   Latent time scaling value used in the velocity inference, default = 20
 ```
 ## Output
 SANSARA generates splice-aware count matrix (saGEX), ready for downstream analyses such as normalization, clustering, dimensionality reduction, and differential expression testing.
