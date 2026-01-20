@@ -33,13 +33,13 @@ R script will create a folder named after Seurat .rds object. It should contain 
 
 ## Running SANSARA
 SANSARA uses `scvelo` and `velovi` to select informative genes and estimate RNA velocity.  
-SANSARA can be executed in two ways:  
-  - Option 1 — Command line interface
+The pipeline can be executed in two ways:  
+  - Option 1 — Command line interface  
     Best for batch runs, pipelines, and reproducible execution.  
   - Option 2 — Jupyter Notebook   
     Best for interactive exploration, debugging, and parameter tuning.      
   
-### Option 1 — Command line interface (CLI) 
+### Option 1 — Command line interface  
 **Basic usage**
 ```
 python pipeline/SANSARA_pipeline.py --loom-file path/to/object.loom -wd path/to/anndata_folder
@@ -78,7 +78,7 @@ python pipeline/SANSARA_pipeline.py --loom-file path/to/object.loom -wd path/to/
 ```
 ### Option 2 — Run from Jupyter Notebook  
 SANSARA can also be executed interactively from a notebook.  
-Example SANSARA_demo.ipynb can be found in `demo` folder
+Example SANSARA_demo.ipynb can be found in `demo` folder.  
 **Example**
 ```
 from pipeline import SANSARA_pipeline as sansara
@@ -99,4 +99,5 @@ The output is ready for downstream analyses such as normalization, clustering, d
 
 If you use SANSARA in your research, please cite the relevant publications:
 
-- Daniil K Lukyanov, Evgeniy S Egorov, Valeriia V Kriukova, Denis Syrko, Victor V Kotliar, Kristin Ladell, David A Price, Andre Franke, Dmitry M Chudakov. "Splicing-aware scRNA-Seq resolution reveals execution-ready programs in effector Tregs". PLoS Comput Biol. 2025 [doi:10.1371/journal.pcbi.1013682] (https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1013682)
+- Daniil K Lukyanov, Evgeniy S Egorov, Valeriia V Kriukova, Denis Syrko, Victor V Kotliar, Kristin Ladell, David A Price, Andre Franke, Dmitry M Chudakov. "Splicing-aware scRNA-Seq resolution reveals execution-ready programs in effector Tregs". PLoS Comput Biol.2025  
+[doi:10.1371/journal.pcbi.1013682](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1013682)
