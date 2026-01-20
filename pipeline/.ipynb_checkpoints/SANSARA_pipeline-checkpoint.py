@@ -10,6 +10,7 @@ import seaborn as sns
 import os
 import re
 import argparse
+from pathlib import Path
 from scipy import io
 from scipy.sparse import coo_matrix, csr_matrix
 import torch
@@ -177,20 +178,49 @@ def load_anndata(working_dir, counts_file, metadata_file, gene_names_file):
     adata : AnnData object
         
     """
-    os.chdir(working_dir)
+    wd = Path(working_dir).expanduser().resolve()
 
-    X = io.mmread(counts_file)
+    counts_path = wd / counts_file
+    metadata_path = wd / metadata_file
+    genes_path = wd / gene_names_file
+
+    if not counts_path.exists():
+        raise FileNotFoundError(counts_path)
+    if not metadata_path.exists():
+        raise FileNotFoundError(metadata_path)
+    if not genes_path.exists():
+        raise FileNotFoundError(genes_path)
+
+    X = io.mmread(counts_path)
     adata = anndata.AnnData(X=X.transpose().tocsr())
 
-    cell_meta = pd.read_csv(metadata_file)
+    cell_meta = pd.read_csv(metadata_path)
     adata.obs = cell_meta
     adata.obs.index = adata.obs["barcode"]
 
-    with open(gene_names_file, "r") as f:
+    with open(genes_path, "r") as f:
         gene_names = f.read().splitlines()
     adata.var.index = gene_names
 
     return adata
+
+def resolve_path(path_str: str, working_dir: str | None = None) -> Path:
+    """
+    Resolve path provided by used
+    """
+    p = Path(path_str).expanduser()
+    if p.is_absolute():
+        return p
+
+    p_cwd = Path.cwd() / p
+    if p_cwd.exists():
+        return p_cwd.resolve()
+
+    if working_dir is not None:
+        p_wd = Path(working_dir).expanduser().resolve() / p
+        return p_wd.resolve()
+
+    return p_cwd.resolve()
 
 def infer_prefix_postfix_from_adata(adata):
     """
@@ -210,7 +240,7 @@ def infer_prefix_postfix_from_adata(adata):
 
     return prefix, postfix
 
-def process_loom_barcodes(loom_file, prefix="", postfix=""):
+def process_loom_barcodes(loom_file, working_dir=None, prefix="", postfix=""):
     """
     Load loom file and adjust cell barcodes to match AnnData naming (change to your convention if needed).
     
@@ -228,16 +258,16 @@ def process_loom_barcodes(loom_file, prefix="", postfix=""):
     ldata : AnnData
         Loom data with adjusted barcodes
     """
-    ldata = sc.read(loom_file, validate=False)
+    loom_path = resolve_path(loom_file, working_dir)
+    if not loom_path.exists():
+        raise FileNotFoundError(f"Loom file not found: {loom_path}")
+    ldata = sc.read(str(loom_path), validate=False)
 
     def normalize(bc: str) -> str:
         bc = str(bc)
-
         if ":" in bc:
             bc = bc.split(":", 1)[1]
-
-        # remove trailing x (velocyto often appends 'x')
-        bc = re.sub(r"x$", "", bc)
+        bc = re.sub(r"x$", "", bc)  # remove trailing x
         return bc
 
     barcodes = [normalize(bc) for bc in ldata.obs_names]
@@ -341,7 +371,12 @@ def run_pipeline(cfg: SansaraConfig) -> str:
     else:
         prefix, postfix = infer_prefix_postfix_from_adata(adata)
         print(f"Auto-inferred barcode mapping: prefix='{prefix}', postfix='{postfix}'")
-    ldata = process_loom_barcodes(cfg.loom_file, prefix=prefix, postfix=postfix)
+    ldata = process_loom_barcodes(
+        cfg.loom_file,
+        working_dir=cfg.working_dir,
+        prefix=prefix,
+        postfix=postfix,
+    )
     print(f"  Loaded loom data: {ldata.n_obs} cells × {ldata.n_vars} genes")
     
     # Step 3
@@ -390,7 +425,10 @@ def run_pipeline(cfg: SansaraConfig) -> str:
     # Step 7
     print("\n[7/7] Calculating splice-aware counts matrix...")
     sagex_matrix = calculate_sagex_matrix(adata)
-    out_path = os.path.join(cfg.working_dir, cfg.output_file)
+    workdir = Path(cfg.working_dir).expanduser().resolve()
+    workdir.mkdir(parents=True, exist_ok=True)
+
+    out_path = workdir / cfg.output_file
     sagex_matrix.to_csv(out_path, index=True)
 
     print("\n" + "=" * 70)
