@@ -34,12 +34,12 @@ R script will create a folder named after Seurat .rds object. It should contain 
 ## Running SANSARA
 SANSARA uses `scvelo` and `velovi` to select informative genes and estimate RNA velocity.  
 The pipeline can be executed in two ways:  
-  - Option 1 — Command line interfacece  
+  - Option 1 — Command line interface  
     Best for batch runs, pipelines, and reproducible execution.  
   - Option 2 — Jupyter Notebook   
     Best for interactive exploration, debugging, and parameter tuning.      
   
-### Option 1 — Command line interfacece
+### Option 1 — Command line interface  
 **Basic usage**
 ```
 python pipeline/SANSARA_pipeline.py --loom-file path/to/object.loom -wd path/to/anndata_folder
