@@ -204,7 +204,7 @@ def load_anndata(working_dir, counts_file, metadata_file, gene_names_file):
 
     return adata
 
-def resolve_path(path_str: str, working_dir: str | None = None) -> Path:
+def resolve_path(path_str: str, working_dir: Optional[str] = None) -> Path:
     """
     Resolve path provided by used
     """
