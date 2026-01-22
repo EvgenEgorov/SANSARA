@@ -65,7 +65,7 @@ python pipeline/SANSARA_pipeline.py --loom-file path/to/object.loom -wd path/to/
 ```   
 - Output
 ```
---output-file        Output CSV file name, default = "splice\_aware\_matrix.csv"
+--output-file        Output CSV file name, default = "splice_aware_matrix.csv"
 ```
 - Analysis parameters
 ```
