@@ -1,5 +1,5 @@
 # SANSARA — Splicing-Aware scrNa-Seq AppRoAch
-SANSARA converts conventional scRNA-seq data into a splicing-aware gene expression matrix (saGEX), enabling analyses that account for gene-specific splicing dynamics at the single-cell level.
+SANSARA is a Python pipeline for generating splicing-aware scRNA-seq gene expression matrices using RNA velocity, enabling scRNA-seq analyses (e.g., clustering and differential expression testing) with respect to splicing dynamics.
 
 ## Installation
   
