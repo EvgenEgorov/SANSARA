@@ -3,7 +3,7 @@ SANSARA is a Python pipeline for generating splicing-aware scRNA-seq gene expres
 
 ## Installation
   
-Clone the repositoty to access SANSARA scripts and demo files:
+Clone the repository to access SANSARA scripts and demo files:
   ```
   git clone https://github.com/EvgenEgorov/SANSARA.git
   cd SANSARA
